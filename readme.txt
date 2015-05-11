@@ -18,5 +18,3 @@ Begin():
  #price, gotta do a bunch with price#
  
 Make better graph than https://docs.google.com/spreadsheets/d/1UCWkA3TnT3SGNOi8efVu7MfkNTx9ZzKQ01X3NIWeB2U/edit#gid=790779993
-
-===Functions.py===: (orphaned)
