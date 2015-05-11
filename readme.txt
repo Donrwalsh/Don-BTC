@@ -15,7 +15,15 @@ Begin():
  oi = overall investment
  pb = price basis
 
- pb_vec = vector of cumulative price basis by month (for use in graphs, not made yet)
+ mo_investment = Time Series of Monthly Investment
+ mo_position = Time Series of Monthly Position
+ mo_pricebasis = Time Series of Monthly Price Basis
+
+ mo_portfolio = data.frame: #pulled from mo_3x above
+Mon - Inv - Pos - PrB
+yearn - investment - position - price basis
+
+
  #price, gotta do a bunch with price#
  
 Make better graph than https://docs.google.com/spreadsheets/d/1UCWkA3TnT3SGNOi8efVu7MfkNTx9ZzKQ01X3NIWeB2U/edit#gid=790779993

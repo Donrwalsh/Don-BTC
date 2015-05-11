@@ -1,3 +1,6 @@
+#install.packages("zoo")
+library("zoo", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+
 Begin <- function(){
   #import data from csv:
   portfolio <<- data.frame(read.csv("/Users/don/Desktop/BTC/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
@@ -25,7 +28,9 @@ Begin <- function(){
     mo_pricebasis[i] <<- mo_investment[i] / mo_position[i]
   }
   cat("Time Series created: mo_investment, mo_position, mo_pricebasis.\n")
-  
+  mo_portfolio <- data.frame(as.yearmon(mo_vec-1), mo_investment[1:18], mo_position[1:18], mo_pricebasis[1:18])
+  names(mo_portfolio) <<- c("Mon","Inv","Pos","PrB")
+  cat("mo_portfolio data frame created.\n")
   cat("Workspace Prepared. Welcome.")
 }
 Begin()
@@ -39,7 +44,3 @@ write.csv(portfolio, file = "/Users/don/Desktop/BTC/portfolio.csv", row.names=FA
 
 #fix data types in portfolio:
 p_dates <- as.Date(portfolio[,1], "%m/%d/%y")
-
-#create mo_portfolio:
-#structured as Mo - Investment - Position - Price Basis. Save as csv.
-
