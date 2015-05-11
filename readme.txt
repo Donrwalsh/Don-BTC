@@ -1,6 +1,8 @@
-===portfolio.csv=== (not finished yet)
+===portfolio.csv===
 Date - Pos - Price
-!!!!! pos is character
+
+
+!!!!! Good Data (numbers match), but cvs data type should be updated.
 
 ===Functions.py===: (orphaned)
 
