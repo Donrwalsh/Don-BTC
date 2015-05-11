@@ -1,8 +1,11 @@
 Begin <- function(){
   portfolio <<- data.frame(read.csv("/Users/don/Desktop/BTC/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
+  cat("portfolio.csv imported as portfolio data frame.\n")
   op <<- sum(as.numeric(portfolio$pos)) # = overall position
   oi <<- sum(as.numeric(portfolio$pos)*as.numeric(portfolio$price)) # = overall investment
   pb <<- oi/op # = price basis
+  cat("variables created: op, oi, pb.\n")
+  cat("Workspace Prepared. Welcome.")
 }
 Begin()
 
