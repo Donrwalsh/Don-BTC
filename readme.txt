@@ -1,5 +1,6 @@
 ===portfolio.csv===
 Purchase Date - Pos (Amt of BTC) - Price (Cost Paid)
+Date - numeric - numeric
 
 
 !!!!! Good Data (numbers match), but cvs data type should be updated.
