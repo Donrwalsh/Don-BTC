@@ -67,7 +67,7 @@ Begin()
 
 #save portfolio:
 #write.csv(portfolio, file = "/Users/don/Desktop/BTC/portfolio.csv", row.names=FALSE)
-#write.csv(price, file = "/Users/don/Desktop/BTC/portfolio.csv", row.names=FALSE)
+#write.csv(price, file = "/Users/don/Desktop/BTC/bpi_price.csv", row.names=FALSE)
 
 #fix data types in portfolio:
 #p_dates <- as.Date(portfolio[,1], "%m/%d/%y")

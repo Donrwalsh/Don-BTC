@@ -16,8 +16,12 @@ for (i in 1:length(json3)) {
 }
 new_price <- data.frame(a, b)
 names(new_price) <- c("Date","Close")
+np_dates <- as.Date(new_price[,1], "bpi.%Y-%m-%d")
+new_price$Date <- np_dates
 
-#noticed that price (and, well, new_price) have incorrect data types, need to correct for both (probably extend this into a data dictionary)
+
 #compare new_price to price. Verify there are no errors.
 #Expand price with any new information found in new_price, with a heads up.
 #save the updated price df to bpi_price.csv.
+
+#p_dates <- as.Date(portfolio[,1], "%m/%d/%y")
