@@ -1,9 +1,47 @@
 library(jsonlite)
+library("zoo", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
 
 Initiate <- function(){
+  #Import Source Data as data frames
   price <<- data.frame(read.csv("/Users/don/Desktop/BTC/bpi_price.csv", header=TRUE, stringsAsFactors=FALSE))
   price$Date <<- as.Date(price[,1], "%Y-%m-%d")
-  cat("bpi_price.csv imported as <price.df>; includes data up to",  toString(price[nrow(price),1]))
+  cat("bpi_price.csv imported as <price.df>; includes data up to",  toString(price[nrow(price),1]), "\n")
+  portfolio <<- data.frame(read.csv("/Users/don/Desktop/BTC/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
+  cat("portfolio.csv imported as <portfolio.df>\n")
+  #Generate Price Time Series
+  pmos <- length(seq(from=as.Date("2010-07-01"), to=Sys.Date(), by='month')) - 1
+  pmo_vec <- seq(as.Date("2010-07-01"), by = "month", length.out = pmos)
+  #Declare Time Series using length determined above:
+  pmo_high <<- ts(rep(0, times = pmos), frequency = 12, start = c(2010,7))
+  pmo_low <<- ts(rep(0, times = pmos), frequency = 12, start = c(2010,7))
+  #Now determine their values
+  for (i in 1:pmos){
+    price_sub <- subset(price, format.Date(Date, "%m")==format(pmo_vec[i], "%m") & format.Date(Date, "%y")==format(pmo_vec[i], "%y"))
+    pmo_high[i] <<- max(price_sub$Close)
+    pmo_low[i] <<- min(price_sub$Close)
+  }
+  cat("Price Time Series created: <pmo_high.ts>, <pmo_low.ts>\n")
+  
+  #Generate Time Series
+  #common variables for mo_xxx time series:
+  mos <- length(seq(from=as.Date("2013-11-01"), to=Sys.Date(), by='month')) - 1
+  mo_vec <- seq(as.Date("2013-12-01"), by = "month", length.out = mos)
+  #Declare Time Series using length determined above:
+  mo_investment <<- ts(rep(0, times = mos), frequency = 12, start=c(2013,11))
+  mo_position <<- ts(rep(0, times = mos), frequency = 12, start=c(2013,11))
+  mo_pricebasis <<- ts(rep(0, times = mos), frequency = 12, start=c(2013,11))
+  #Now determine their values
+  for (i in 1:mos){
+    port_sub <- subset(portfolio, date < mo_vec[i])
+    mo_investment[i] <<- sum(as.numeric(port_sub$pos)*as.numeric(port_sub$price))
+    mo_position[i] <<- sum(as.numeric(port_sub$pos))
+    mo_pricebasis[i] <<- mo_investment[i] / mo_position[i]
+  }
+  cat("Time Series created: <mo_investment.ts>, <mo_position.ts>, <mo_pricebasis.ts>\n")
+  mo_portfolio <<- data.frame(as.yearmon(mo_vec-1), mo_investment[1:18], mo_position[1:18], mo_pricebasis[1:18])
+  names(mo_portfolio) <<- c("Mon","Inv","Pos","PrB")
+  cat("portfolio.csv used to generate <mo_portfolio.df>\n")
+  cat("Workspace Prepared. Welcome.")
 }
 
 UpdatePrice <- function(){
@@ -13,11 +51,11 @@ UpdatePrice <- function(){
   for (i in 1:length(json2)) {
     b[i] <- json2[[i]]
   }
-  new_price <<- data.frame(names(json2), b)
-  names(new_price) <<- c("Date","Close")
-  np_dates <<- as.Date(new_price[,1], "bpi.%Y-%m-%d")
-  new_price$Date <<- np_dates
-  from_old_price <<- subset(price, Date >= new_price[1,1])
+  new_price <- data.frame(names(json2), b)
+  names(new_price) <- c("Date","Close")
+  np_dates <- as.Date(new_price[,1], "bpi.%Y-%m-%d")
+  new_price$Date <- np_dates
+  from_old_price <- subset(price, Date >= new_price[1,1])
   amt <- nrow(new_price) - nrow(from_old_price)
   while (TRUE){
     if (amt == 0){
@@ -38,3 +76,29 @@ UpdatePrice <- function(){
   }
 }
 
+Graph <- function(months){
+  #verify input:
+  if (!is.numeric(months)){
+    stop("Invalid entry; Not a number")
+  }
+  if (months > length(pmo_high)){
+    stop("Invalid entry; Too many months - Max is ", length(pmo_high), "\n")
+  }
+  #generate year & mon:
+  year <- as.numeric(format(Sys.Date(), "%Y")) - (floor(months/12))
+  mon <- as.numeric(format(Sys.Date(), "%m")) - (months %% 12)
+  high <- window(pmo_high, c(year, mon))
+  low <- window(pmo_low, c(year, mon))
+  if (months > length(mo_pricebasis)){
+    pbpb <- mo_pricebasis
+  } else {
+    pbpb <- window(mo_pricebasis, c(year, mon))
+  }
+  ts.plot(high, low, pbpb, gpars=list(xlab="Time", ylab="Price", col = c("red", "blue", "black"), axes=F))
+  time <- seq(as.Date(Sys.Date()), length.out=months, by = "-1 month")
+  time <- as.yearmon(time)
+  axis(1, labels = rev(time), at=time(high))
+  axis(2)
+  box()
+}
+#Incredibly close. Only oddity is the behavior of the tick marks in longer data sets.
