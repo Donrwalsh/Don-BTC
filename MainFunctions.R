@@ -1,3 +1,4 @@
+###COMMAND + ENTER TO RUN THIS, SHINY FUCKED IT UP###
 library(jsonlite)
 library("zoo", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
 
@@ -118,3 +119,8 @@ Graph <- function(months){
   box()
 }
 #Incredibly close. Only oddity is the behavior of the tick marks in longer data sets.
+
+ShinyGo <- function(){
+  library(shiny)
+  runApp("/Users/don/Desktop/BTC")
+}
