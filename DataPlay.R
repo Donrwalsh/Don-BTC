@@ -71,3 +71,25 @@ Begin()
 
 #fix data types in portfolio:
 #p_dates <- as.Date(portfolio[,1], "%m/%d/%y")
+
+
+
+#Derive a Graph from Source Data, it will plot Investment alongside value (price*position) using bpi_price.
+#Determine start date, build data frame shell up to latest day (by bpi_price)
+
+iv_date <- seq(from = portfolio[1,1], to = price[nrow(price),1], by = "days")
+iv_price <- subset(price, price$Date >= portfolio[1,1])
+iv_pos <- rep(0, length(iv_date))
+iv_inv <- rep(0, length(iv_date))
+for (i in 1:length(iv_date)){
+  port_sub <- subset(portfolio, portfolio$date <= iv_date[i])
+  iv_pos[i] <- sum(port_sub$pos)
+  iv_inv[i] <- sum(port_sub$pos*port_sub$price)
+}
+inv_val <- data.frame(iv_date, iv_price$Close*iv_pos, iv_inv, (iv_price$Close*iv_pos)/iv_inv)
+names(inv_val) <- c("Date", "Value", "Investment", "Percent")
+
+#Make a column for percentage change
+#Pull position data into the data frame, then combine it with price to find total inv value
+#Pull investment data into the data frame
+#Plot it

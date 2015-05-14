@@ -7,7 +7,23 @@ Initiate <- function(){
   price$Date <<- as.Date(price[,1], "%Y-%m-%d")
   cat("bpi_price.csv imported as <price.df>; includes data up to",  toString(price[nrow(price),1]), "\n")
   portfolio <<- data.frame(read.csv("/Users/don/Desktop/BTC/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
+  portfolio$date <<- as.Date(portfolio[,1], "%Y-%m-%d")
   cat("portfolio.csv imported as <portfolio.df>\n")
+  
+  #Generate inv_val data frame
+  iv_date <- seq(from = portfolio[1,1], to = price[nrow(price),1], by = "days")
+  iv_price <- subset(price, price$Date >= portfolio[1,1])
+  iv_pos <- rep(0, length(iv_date))
+  iv_inv <- rep(0, length(iv_date))
+  for (i in 1:length(iv_date)){
+    port_sub <- subset(portfolio, portfolio$date <= iv_date[i])
+    iv_pos[i] <- sum(port_sub$pos)
+    iv_inv[i] <- sum(port_sub$pos*port_sub$price)
+  }
+  inv_val <<- data.frame(iv_date, iv_price$Close*iv_pos, iv_inv, (iv_price$Close*iv_pos)/iv_inv)
+  names(inv_val) <<- c("Date", "Value", "Investment", "Percent")
+  cat("Source Data used to generate <inv_val.df>\n")
+  
   #Generate Price Time Series
   pmos <- length(seq(from=as.Date("2010-07-01"), to=Sys.Date(), by='month')) - 1
   pmo_vec <- seq(as.Date("2010-07-01"), by = "month", length.out = pmos)
@@ -38,7 +54,7 @@ Initiate <- function(){
     mo_pricebasis[i] <<- mo_investment[i] / mo_position[i]
   }
   cat("Time Series created: <mo_investment.ts>, <mo_position.ts>, <mo_pricebasis.ts>\n")
-  mo_portfolio <<- data.frame(as.yearmon(mo_vec-1), mo_investment[1:18], mo_position[1:18], mo_pricebasis[1:18])
+  mo_portfolio <<- data.frame(as.yearmon(mo_vec-1), mo_investment[1:mos], mo_position[1:mos], mo_pricebasis[1:mos])
   names(mo_portfolio) <<- c("Mon","Inv","Pos","PrB")
   cat("portfolio.csv used to generate <mo_portfolio.df>\n")
   cat("Workspace Prepared. Welcome.")
