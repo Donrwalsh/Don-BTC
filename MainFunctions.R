@@ -1,6 +1,8 @@
 ###COMMAND + ENTER TO RUN THIS, SHINY FUCKED IT UP###
 library(jsonlite)
 library("zoo", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+library(shiny)
+library(shinyapps)
 
 Initiate <- function(){
   #Import Source Data as data frames
@@ -122,5 +124,11 @@ Graph <- function(months){
 
 ShinyGo <- function(){
   library(shiny)
+  sportfolio <<- portfolio
+  sportfolio$date <<- as.character(portfolio$date)
+  sprice <<- price
+  sprice$Date <<- as.character(price$Date)
+  sinv_val <<- inv_val
+  sinv_val$Date <<- as.character(inv_val$Date)
   runApp("/Users/don/Desktop/BTC")
 }

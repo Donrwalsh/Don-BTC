@@ -1,24 +1,19 @@
 library(shiny)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Hello World!"),
-  
-  # Sidebar with a slider input for the number of bins
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("bins",
-                  "Number of bins:",
-                  min = 5,
-                  max = 50,
-                  value = 30)
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-      plotOutput("distPlot")
-    )
-  )
-))
+# Define UI for dataset viewer application
+shinyUI(navbarPage("BTC Data Explorer",
+  tabPanel("Raw Data",
+           sidebarLayout(
+             sidebarPanel(
+               selectInput("dataset", "Choose a dataset:", 
+                           choices = c("Portfolio","Price","Inv_Val")),
+               
+               sliderInput("obs", "Number of observations to view:", min=0, max=1000, value = 10)
+             ),
+             mainPanel(
+               verbatimTextOutput("summary"),
+               
+               dataTableOutput("view")
+             )
+           )
+  )))
