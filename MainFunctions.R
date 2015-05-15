@@ -1,15 +1,18 @@
 ###COMMAND + ENTER TO RUN THIS, SHINY FUCKED IT UP###
 library(jsonlite)
-library("zoo", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+library(zoo)
 library(shiny)
 library(shinyapps)
 
 Initiate <- function(){
+  #Set Working Directory
+  setwd("/Users/don/Desktop/Bitcoin")
+  
   #Import Source Data as data frames
-  price <<- data.frame(read.csv("/Users/don/Desktop/BTC/bpi_price.csv", header=TRUE, stringsAsFactors=FALSE))
+  price <<- data.frame(read.csv("bpi_price.csv", header=TRUE, stringsAsFactors=FALSE))
   price$Date <<- as.Date(price[,1], "%Y-%m-%d")
   cat("bpi_price.csv imported as <price.df>; includes data up to",  toString(price[nrow(price),1]), "\n")
-  portfolio <<- data.frame(read.csv("/Users/don/Desktop/BTC/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
+  portfolio <<- data.frame(read.csv("/Users/don/Desktop/Bitcoin/portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
   portfolio$date <<- as.Date(portfolio[,1], "%Y-%m-%d")
   cat("portfolio.csv imported as <portfolio.df>\n")
   
@@ -60,8 +63,19 @@ Initiate <- function(){
   mo_portfolio <<- data.frame(as.yearmon(mo_vec-1), mo_investment[1:mos], mo_position[1:mos], mo_pricebasis[1:mos])
   names(mo_portfolio) <<- c("Mon","Inv","Pos","PrB")
   cat("portfolio.csv used to generate <mo_portfolio.df>\n")
+  
+  #prepare special shiny datasets
+  sportfolio <<- portfolio
+  sportfolio$date <<- as.character(portfolio$date)
+  sprice <<- price
+  sprice$Date <<- as.character(price$Date)
+  sinv_val <<- inv_val
+  sinv_val$Date <<- as.character(inv_val$Date)
+  cat("<sportfolio.df>, <sprice.df> and <sinv_val.df> created for Shiny.\n")
   cat("Workspace Prepared. Welcome.")
 }
+
+Initiate()
 
 UpdatePrice <- function(){
   suppressWarnings(json <- jsonlite::fromJSON("https://api.coindesk.com/v1/bpi/historical/close.json"))
@@ -124,11 +138,11 @@ Graph <- function(months){
 
 ShinyGo <- function(){
   library(shiny)
-  sportfolio <<- portfolio
-  sportfolio$date <<- as.character(portfolio$date)
-  sprice <<- price
-  sprice$Date <<- as.character(price$Date)
-  sinv_val <<- inv_val
-  sinv_val$Date <<- as.character(inv_val$Date)
-  runApp("/Users/don/Desktop/BTC")
+  runApp("/Users/don/Desktop/Bitcoin")
+}
+
+ShinyDeploy <- function(){
+  library(shinyapps)
+  setwd("/Users/don/Desktop/Bitcoin")
+  deployApp()
 }

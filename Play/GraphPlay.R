@@ -1,3 +1,5 @@
+#TEST
+
 GraphAT <- function(){
   ts.plot(pmo_high, pmo_low,mo_pricebasis, gpars=list(xlab="Time", ylab="Price", col = c("red", "blue", "black")))
 }
