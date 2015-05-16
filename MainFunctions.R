@@ -4,6 +4,8 @@ library(zoo)
 library(shiny)
 library(shinyapps)
 
+#Turn Initiate into Local Initiate, then create one for apps initiate (but w/ better name)
+
 Initiate <- function(){
   #Set Working Directory
   setwd("/Users/don/Desktop/Bitcoin")

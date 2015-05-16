@@ -4,8 +4,7 @@ library(datasets)
 # Define server logic required to summarize and view the selected
 # dataset
 shinyServer(function(input, output) {
-  sprice <<- data.frame(read.csv("bpi_price.csv", header=TRUE, stringsAsFactors=FALSE))
-  setwd("/Users/don/Desktop/Bitcoin")
+  sportfolio <<- data.frame(read.csv("portfoli.csv", header=TRUE, stringsAsFactors=FALSE))
   
   # Return the requested dataset
   datasetInput <- reactive({
