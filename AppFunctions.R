@@ -17,4 +17,24 @@ Portfolio <- function(){
   names(this) <- c("Date", "Event Position", "Event Price", "Total Position", "Investment", "Price Basis")
   return(this) 
 }
-
+MO_Portfolio <- function(){
+  this <- data.frame(read.csv("portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
+  mos <- length(seq(from=as.Date("2013-11-01"), to=Sys.Date(), by='month'))
+  mo_vec <- seq(as.Date("2013-12-01"), by = "month", length.out = mos)
+  Month <- as.yearmon(seq(as.Date("2013-11-01"), by = "month", length.out = mos))
+  Position <- rep(0, length.out = mos)
+  Investment <- rep(0, length.out = mos)
+  PriceBasis <- rep(0, length.out = mos)
+  for (i in 1:mos){
+    port_sub <- subset(this, date < mo_vec[i])
+    Investment[i] <- sum(as.numeric(port_sub$pos)*as.numeric(port_sub$price))
+    Position[i] <- sum(as.numeric(port_sub$pos))
+    PriceBasis[i] <- Investment[i]/Position[i]
+  }
+  this2 <- data.frame(Month, Position, Investment, PriceBasis)
+  this2$Position <- round(this2$Position, digits = 2)
+  this2$Investment <- round(this2$Investment, digits = 2)
+  this2$PriceBasis <- round(this2$PriceBasis, digits = 2)
+  names(this2) <- c("Month", "Position", "Investment", "PriceBasis")
+  return(this2)
+}

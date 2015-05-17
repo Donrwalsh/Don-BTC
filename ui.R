@@ -6,7 +6,7 @@ shinyUI(navbarPage("BTC Data Explorer",
            sidebarLayout(
              sidebarPanel(
                selectInput("dataset", "Choose a dataset:", 
-                           choices = ("Portfolio"),
+                           choices = c("Portfolio", "Portfolio (monthly)"),
                
              )),
              mainPanel(
