@@ -1,3 +1,4 @@
+#Creating Data for the App:
 Portfolio <- function(){
   this <- data.frame(read.csv("portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
   this$pos2[1] <- this$pos[1] 

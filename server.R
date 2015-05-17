@@ -6,6 +6,7 @@ library(datasets)
 shinyServer(function(input, output) {
   
   #get apps data:
+  source('AppFunctions.R')
   disp_portfolio <- Portfolio()
   
   # Return the requested dataset
