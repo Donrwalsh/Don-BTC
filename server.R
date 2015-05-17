@@ -4,25 +4,18 @@ library(datasets)
 # Define server logic required to summarize and view the selected
 # dataset
 shinyServer(function(input, output) {
-  sportfolio <<- data.frame(read.csv("portfoli.csv", header=TRUE, stringsAsFactors=FALSE))
+  
+  #get apps data:
+  disp_portfolio <- Portfolio()
   
   # Return the requested dataset
   datasetInput <- reactive({
     switch(input$dataset,
-           "Portfolio" = sportfolio,
-           "Price" = sprice,
-           "Inv_Val" = sinv_val)
+           "Portfolio" = disp_portfolio,)
   })
-  
-  # Generate a summary of the dataset
-  output$summary <- renderPrint({
-    dataset <- datasetInput()
-    summary(dataset)
-  })
-  
   # Show the first "n" observations
   output$view <- renderDataTable({
-    head(datasetInput(), n = input$obs)
+    datasetInput()
   })
 })
 

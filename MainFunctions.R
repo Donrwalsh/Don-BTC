@@ -140,6 +140,8 @@ Graph <- function(months){
 
 ShinyGo <- function(){
   library(shiny)
+  setwd("/Users/don/Desktop/Bitcoin")
+  source('AppFunctions.R')
   runApp("/Users/don/Desktop/Bitcoin")
 }
 
@@ -147,4 +149,8 @@ ShinyDeploy <- function(){
   library(shinyapps)
   setwd("/Users/don/Desktop/Bitcoin")
   deployApp()
+}
+
+BuildPortfolio <- function(){
+  return(data.frame(read.csv("portfolio.csv", header=TRUE, stringsAsFactors=FALSE))) 
 }
