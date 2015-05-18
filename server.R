@@ -16,9 +16,16 @@ shinyServer(function(input, output) {
            "Portfolio" = disp_portfolio,
            "Portfolio (monthly)" = disp_moportfolio)
   })
-  # Show the first "n" observations
   output$view <- renderDataTable({
     datasetInput()
   })
+  output$downloadData <- downloadHandler(
+    filename = function() { 
+      paste(input$dataset, '.csv', sep='') 
+    },
+    content = function(file) {
+      write.csv(datasetInput(), file)
+    }
+  )
 })
 

@@ -6,11 +6,13 @@ shinyUI(navbarPage("BTC Data Explorer",
            sidebarLayout(
              sidebarPanel(
                selectInput("dataset", "Choose a dataset:", 
-                           choices = c("Portfolio", "Portfolio (monthly)"),
-               
-             )),
+                           choices = c("Portfolio", "Portfolio (monthly)")),
+                           downloadButton("downloadData", "Download")
+             ),
              mainPanel(
                dataTableOutput("view")
              )
            )
-  )))
+  )
+ )
+)

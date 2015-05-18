@@ -1,3 +1,4 @@
+library(zoo)
 #Creating Data for the App:
 Portfolio <- function(){
   this <- data.frame(read.csv("portfolio.csv", header=TRUE, stringsAsFactors=FALSE))
@@ -35,6 +36,6 @@ MO_Portfolio <- function(){
   this2$Position <- round(this2$Position, digits = 2)
   this2$Investment <- round(this2$Investment, digits = 2)
   this2$PriceBasis <- round(this2$PriceBasis, digits = 2)
-  names(this2) <- c("Month", "Position", "Investment", "PriceBasis")
+  names(this2) <- c("Month", "Position", "Investment", "Price Basis")
   return(this2)
 }
