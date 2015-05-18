@@ -5,16 +5,30 @@ myData <- read.csv('data.csv.gz', header=FALSE)
 #Above downloads, now we have myData ready to be manipulated.
 #Initial build of bistampUSD table. Ready for iterative loop to complete:
 snippet <- subset(myData, as.POSIXct(myData$V1, origin = "1970-01-01") < "2011-09-14")
-WATP <- sum(snippet$V2*snippet$V3)/sum(snippet$V3)
+VWAP <- sum(snippet$V2*snippet$V3)/sum(snippet$V3)
 Vol <- sum(snippet$V3)
-Date <- as.Date(as.POSIXct(snippet[1,1], origin = "1970-01-01"))
-bitstampUSD <- data.frame(Date, WATP, Vol, stringsAsFactors = FALSE)
+Date <- as.Date(as.POSIXct("2011-09-13"))
+bitstampUSD <- data.frame(Date, VWAP, Vol, stringsAsFactors = FALSE)
 myData <- myData[-c(1:nrow(snippet)),]
 
+#Function that updates bitstampUSD one time:
+
+bitstampUpdate <- function(){
+  Date <- as.Date(as.POSIXct("2011-09-13")) + nrow(bitstampUSD)
+  snippet <- subset(myData, as.Date(as.POSIXct(myData$V1, origin = "1970-01-01")) < Date+1)
+  VWAP <- sum(snippet$V2*snippet$V3)/sum(snippet$V3)
+  Vol <- sum(snippet$V3)
+  bitstampUSD[nrow(bitstampUSD)+1,1] <<- Date
+  bitstampUSD[nrow(bitstampUSD),2] <<- VWAP
+  bitstampUSD[nrow(bitstampUSD),3] <<- Vol
+  #added if statement to avoid dropping data on 0-volume days
+  if (nrow(snippet)>0){myData <<- myData[-c(1:nrow(snippet)),]}
+}
 
 
-
-
+for (i in 1:25){
+  bitstampUpdate()
+}
 
 
 
