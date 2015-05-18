@@ -26,7 +26,7 @@ bitstampUpdate <- function(){
 }
 
 
-for (i in 1:25){
+for (i in 1:98){
   bitstampUpdate()
 }
 
