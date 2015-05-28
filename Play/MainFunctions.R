@@ -76,8 +76,6 @@ Initiate <- function(){
   cat("<sportfolio.df>, <sprice.df> and <sinv_val.df> created for Shiny.\n")
   cat("Workspace Prepared. Welcome.")
 }
-
-
 UpdatePrice <- function(){
   suppressWarnings(json <- jsonlite::fromJSON("https://api.coindesk.com/v1/bpi/historical/close.json"))
   json2 <- unlist(lapply(json[1], function (x) x))
@@ -104,12 +102,11 @@ UpdatePrice <- function(){
     price <<- rbind(price, to_add)
     rownames(price) <<- 1:nrow(price)
     cat("<price.df> updated with", amt, "new values.\n")
-    write.csv(price, file = "/Users/don/Desktop/BTC/bpi_price.csv", row.names=FALSE)
+    write.csv(price, file = "/Users/don/Desktop/Bitcoin/bpi_price.csv", row.names=FALSE)
     cat("bpi_price.csv updated to match new <price.df> values.")
     break
   }
-}
-
+} #uses bpi price
 Graph <- function(months){
   #verify input:
   if (!is.numeric(months)){
@@ -134,22 +131,19 @@ Graph <- function(months){
   axis(1, labels = rev(time), at=time(high))
   axis(2)
   box()
-}
-#Incredibly close. Only oddity is the behavior of the tick marks in longer data sets.
-
+} #Working, needs some help on the X-axis
 ShinyGo <- function(){
   library(shiny)
   setwd("/Users/don/Desktop/Bitcoin")
   source('AppFunctions.R')
   runApp("/Users/don/Desktop/Bitcoin")
 }
-
 ShinyDeploy <- function(){
   library(shinyapps)
   setwd("/Users/don/Desktop/Bitcoin")
   deployApp()
-}
+} #Unlikely to work without messing with folders
 
-BuildPortfolio <- function(){
-  return(data.frame(read.csv("portfolio.csv", header=TRUE, stringsAsFactors=FALSE))) 
+BitstampUpdate <- function(){
+  
 }

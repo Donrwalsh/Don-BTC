@@ -5,7 +5,7 @@ bitstampUSD <- CreatePriceFile("http://api.bitcoincharts.com/v1/csv/bitstampUSD.
 CreatePriceFile <- function(URL){
   #Grab big raw data file from bitcoincharts, then bring it into the workspace
   download.file(URL, destfile = "data.csv.gz", method="curl")
-  myData <- read.csv('data.csv.gz', header=FALSE)
+  myData <<- read.csv('data.csv.gz', header=FALSE)
   
 }
 
